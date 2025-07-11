@@ -1,11 +1,14 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Wa Lands Commission Portal</title>
+  <title>Wa Lands Commission - Login</title>
   <style>
     body {
-      margin: 0;
       font-family: Arial, sans-serif;
+      background: #f0f4f8;
+      margin: 0;
+      padding: 0;
     }
 
     header {
@@ -28,155 +31,95 @@
       font-size: 24px;
     }
 
-    nav {
-      display: flex;
-      justify-content: center;
+    .container {
+      max-width: 400px;
+      margin: 40px auto;
+      padding: 30px;
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #003366;
+    }
+
+    input[type="text"],
+    input[type="password"] {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
       background-color: #0059b3;
-    }
-
-    nav a {
+      border: none;
       color: white;
-      padding: 14px 20px;
-      text-decoration: none;
-      display: block;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
     }
 
-    nav a:hover {
+    button:hover {
       background-color: #0073e6;
     }
 
-    #content {
-      padding: 20px;
+    .switch {
+      text-align: center;
+      margin-top: 15px;
+      color: #333;
     }
 
-    iframe {
-      width: 100%;
-      height: 600px;
-      border: none;
+    .switch a {
+      color: #0059b3;
+      text-decoration: none;
     }
 
-    .hidden {
-      display: none;
-    }
-
-    .thematic-container {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-    }
-
-    .thematic-container img {
-      width: 200px;
-      cursor: pointer;
-      border: 1px solid #ccc;
-      transition: 0.3s;
-    }
-
-    .thematic-container img:hover {
-      transform: scale(1.05);
-    }
-
-    #modal {
-      display: none;
-      position: fixed;
-      z-index: 999;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      overflow: auto;
-      background-color: rgba(0,0,0,0.8);
-    }
-
-    #modal img {
-      margin: auto;
-      display: block;
-      max-width: 90%;
-      max-height: 90%;
-      margin-top: 60px;
-    }
-
-    #modal span {
-      position: absolute;
-      top: 20px;
-      right: 35px;
-      color: white;
-      font-size: 40px;
-      cursor: pointer;
+    .switch a:hover {
+      text-decoration: underline;
     }
   </style>
 </head>
 <body>
   <header>
-    <img src="img/afrigist.png" alt="Left Logo">
+    <img src="C:\Users\USER\Desktop\WACIS\img\afrigist.png" alt="Left Logo">
     <h1>Wa Lands Commission Parcel Portal</h1>
-    <img src="img/lands com.png" alt="Right Logo">
+    <img src="C:\Users\USER\Desktop\WACIS\img\lands com.png" alt="Right Logo">
   </header>
 
-  <nav>
-    <a href="#" onclick="showPage('home')">Home</a>
-    <a href="#" onclick="showPage('search')">Parcel Search</a>
-    <a href="#" onclick="showPage('map')">Map View</a>
-    <a href="#" onclick="showPage('thematic')">Thematic Maps</a>
-    <a href="#" onclick="showPage('contact')">Contact Us</a>
-  </nav>
-
-  <div id="content">
-    <div id="home">
-      <h2>Welcome to the Wa Lands Commission Parcel Information Portal</h2>
-      <p>This platform allows citizens to access land parcel information, view interactive maps, search by plot number, and explore thematic maps relevant to urban planning and development in Wa Municipality.</p>
+  <div class="container">
+    <h2 id="form-title">Login</h2>
+    <form id="auth-form" onsubmit="handleLogin(event)">
+      <input type="text" id="username" placeholder="Username" required />
+      <input type="password" id="password" placeholder="Password" required />
+      <button type="submit">Login</button>
+    </form>
+    <div class="switch">
+      <span id="toggle-text">New user? <a href="#" onclick="switchMode()">Register</a></span>
     </div>
-
-    <div id="search" class="hidden">
-      <iframe src="search.html"></iframe>
-    </div>
-
-    <div id="map" class="hidden">
-      <iframe src="project.html#center=10.0607,-2.5019&zoom=15"></iframe>
-    </div>
-
-    <div id="thematic" class="hidden">
-      <h2>Thematic Maps</h2>
-      <div class="thematic-container">
-        <img src="thematic/Gender Map.jpg" alt="Gender Map" onclick="openModal(this.src)">
-        <img src="thematic/Zoning Map.jpg" alt="Zoning Map" onclick="openModal(this.src)">
-        <img src="thematic/Acquisition Type Map.jpg" alt="Acquisition Type Map" onclick="openModal(this.src)">
-        <img src="thematic/Available Parcels Near Public Spaces.jpg" alt="Available Parcels" onclick="openModal(this.src)">
-        <img src="thematic/Digital Map of Area.jpg" alt="Digital Map of Area" onclick="openModal(this.src)">
-      </div>
-    </div>
-
-    <div id="contact" class="hidden">
-      <h2>Contact Us</h2>
-      <p><strong>Wa Lands Commission Office</strong></p>
-      <p>Location: Wa Municipality, Upper West Region, Ghana</p>
-      <p>Address: Adjacent Regional Fire Service Office, Wa</p>
-      <p>Phone: +233 302 500 000</p>
-      <p>Email: <a href="mailto:lands@gh.gov">lands@gh.gov</a></p>
-    </div>
-  </div>
-
-  <div id="modal" onclick="closeModal()">
-    <span>&times;</span>
-    <img id="modal-img" src="">
   </div>
 
   <script>
-    function showPage(pageId) {
-      const sections = ['home', 'search', 'map', 'thematic', 'contact'];
-      sections.forEach(id => {
-        document.getElementById(id).classList.add('hidden');
-      });
-      document.getElementById(pageId).classList.remove('hidden');
+    let isRegister = false;
+
+    function switchMode() {
+      isRegister = !isRegister;
+      document.getElementById("form-title").textContent = isRegister ? "Register" : "Login";
+      document.getElementById("toggle-text").innerHTML = isRegister
+        ? 'Already have an account? <a href="#" onclick="switchMode()">Login</a>'
+        : 'New user? <a href="#" onclick="switchMode()">Register</a>';
     }
 
-    function openModal(src) {
-      document.getElementById('modal-img').src = src;
-      document.getElementById('modal').style.display = 'block';
-    }
-
-    function closeModal() {
-      document.getElementById('modal').style.display = 'none';
+    function handleLogin(event) {
+      event.preventDefault();
+      // Allow any username/password for demo purposes
+      window.location.href = "portal.html"; // Load the full portal interface
     }
   </script>
 </body>
