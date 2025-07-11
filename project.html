@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Parcel Search by Plot Number</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+    }
+
+    #container {
+      display: flex;
+      height: 100%;
+    }
+
+    #sidebar {
+      width: 320px;
+      background: #f9f9f9;
+      border-right: 1px solid #ccc;
+      padding: 10px;
+      overflow-y: auto;
+      font-family: sans-serif;
+    }
+
+    #map {
+      flex: 1;
+    }
+
+    #searchBar {
+      margin-bottom: 10px;
+    }
+
+    #search {
+      width: 100%;
+      padding: 8px;
+      font-size: 16px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 6px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .plot-label {
+      background: none !important;
+      border: none !important;
+      box-shadow: none !important;
+      padding: 0 !important;
+      font-size: 12px;
+      font-weight: bold;
+      color: #000;
+      text-shadow: 1px 1px 2px white;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+
+<div id="container">
+  <div id="sidebar">
+    <div id="searchBar">
+      <input type="text" id="search" placeholder="Enter Plot Number..." />
+    </div>
+    <div id="result">
+      <i>Search a plot number to see its details.</i>
+    </div>
+  </div>
+  <div id="map"></div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+  const map = L.map('map').setView([0, 0], 2);
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap contributors'
+  }).addTo(map);
+
+  let parcelLayer;
+  let allFeatures = [];
+
+  function showAttributesTable(properties) {
+    const container = document.getElementById('result');
+    container.innerHTML = '';
+
+    const table = document.createElement('table');
+    for (const key in properties) {
+      const row = document.createElement('tr');
+      const keyCell = document.createElement('th');
+      keyCell.textContent = key;
+      const valCell = document.createElement('td');
+      valCell.textContent = properties[key];
+      row.appendChild(keyCell);
+      row.appendChild(valCell);
+      table.appendChild(row);
+    }
+
+    container.appendChild(table);
+  }
+
+  fetch('./parcelpro.geojson')
+    .then(res => res.json())
+    .then(data => {
+      allFeatures = data.features;
+
+      parcelLayer = L.geoJSON(data, {
+        onEachFeature: function (feature, layer) {
+          const props = feature.properties;
+          layer.bindTooltip(props.Plot_Numbe || '', {
+            permanent: true,
+            direction: 'center',
+            className: 'plot-label'
+          });
+
+          layer.on('click', () => {
+            map.fitBounds(layer.getBounds());
+            showAttributesTable(props);
+          });
+        },
+        style: {
+          color: "#007BFF",
+          weight: 1.5,
+          fillOpacity: 0.3
+        }
+      }).addTo(map);
+
+      map.fitBounds(parcelLayer.getBounds());
+    });
+
+  document.getElementById('search').addEventListener('input', function () {
+    const query = this.value.trim().toLowerCase();
+    if (!query) return;
+
+    const match = allFeatures.find(f =>
+      f.properties.Plot_Numbe &&
+      f.properties.Plot_Numbe.toString().toLowerCase() === query
+    );
+
+    if (match) {
+      const bounds = L.geoJSON(match).getBounds();
+      map.fitBounds(bounds);
+
+      parcelLayer.eachLayer(layer => {
+        if (layer.feature === match) {
+          layer.openTooltip();
+          showAttributesTable(layer.feature.properties);
+        }
+      });
+    }
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Search Parcel by Plot Number</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      max-width: 700px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      margin-bottom: 20px;
+      box-sizing: border-box;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    th, td {
+      padding: 10px;
+      border: 1px solid #ddd;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+
+    #notFound {
+      color: red;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Search Plot Attributes by Plot Number</h2>
+  <input type="text" id="searchInput" placeholder="Enter Plot Number (e.g. 1234)">
+
+  <div id="result"></div>
+
+  <script>
+    let geoData = [];
+
+    // Load the GeoJSON file
+    fetch('./parcelpro.geojson')
+      .then(response => response.json())
+      .then(data => {
+        geoData = data.features;
+      });
+
+    document.getElementById('searchInput').addEventListener('input', function () {
+      const query = this.value.trim().toLowerCase();
+      const resultDiv = document.getElementById('result');
+      resultDiv.innerHTML = '';
+
+      if (!query) return;
+
+      const match = geoData.find(f =>
+        f.properties.Plot_Numbe &&
+        f.properties.Plot_Numbe.toString().toLowerCase() === query
+      );
+
+      if (match) {
+        const props = match.properties;
+        const table = document.createElement('table');
+
+        for (const key in props) {
+          const row = document.createElement('tr');
+          const th = document.createElement('th');
+          th.textContent = key;
+          const td = document.createElement('td');
+          td.textContent = props[key];
+          row.appendChild(th);
+          row.appendChild(td);
+          table.appendChild(row);
+        }
+
+        resultDiv.appendChild(table);
+      } else {
+        resultDiv.innerHTML = '<div id="notFound">No plot found with that number.</div>';
+      }
+    });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,183 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Wa Lands Commission Portal</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    header {
+      background-color: #003366;
+      padding: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    header img {
+      height: 60px;
+    }
+
+    header h1 {
+      color: white;
+      flex-grow: 1;
+      text-align: center;
+      margin: 0;
+      font-size: 24px;
+    }
+
+    nav {
+      display: flex;
+      justify-content: center;
+      background-color: #0059b3;
+    }
+
+    nav a {
+      color: white;
+      padding: 14px 20px;
+      text-decoration: none;
+      display: block;
+    }
+
+    nav a:hover {
+      background-color: #0073e6;
+    }
+
+    #content {
+      padding: 20px;
+    }
+
+    iframe {
+      width: 100%;
+      height: 600px;
+      border: none;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .thematic-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .thematic-container img {
+      width: 200px;
+      cursor: pointer;
+      border: 1px solid #ccc;
+      transition: 0.3s;
+    }
+
+    .thematic-container img:hover {
+      transform: scale(1.05);
+    }
+
+    #modal {
+      display: none;
+      position: fixed;
+      z-index: 999;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.8);
+    }
+
+    #modal img {
+      margin: auto;
+      display: block;
+      max-width: 90%;
+      max-height: 90%;
+      margin-top: 60px;
+    }
+
+    #modal span {
+      position: absolute;
+      top: 20px;
+      right: 35px;
+      color: white;
+      font-size: 40px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="img/afrigist.png" alt="Left Logo">
+    <h1>Wa Lands Commission Parcel Portal</h1>
+    <img src="img/lands com.png" alt="Right Logo">
+  </header>
+
+  <nav>
+    <a href="#" onclick="showPage('home')">Home</a>
+    <a href="#" onclick="showPage('search')">Parcel Search</a>
+    <a href="#" onclick="showPage('map')">Map View</a>
+    <a href="#" onclick="showPage('thematic')">Thematic Maps</a>
+    <a href="#" onclick="showPage('contact')">Contact Us</a>
+  </nav>
+
+  <div id="content">
+    <div id="home">
+      <h2>Welcome to the Wa Lands Commission Parcel Information Portal</h2>
+      <p>This platform allows citizens to access land parcel information, view interactive maps, search by plot number, and explore thematic maps relevant to urban planning and development in Wa Municipality.</p>
+    </div>
+
+    <div id="search" class="hidden">
+      <iframe src="search.html"></iframe>
+    </div>
+
+    <div id="map" class="hidden">
+      <iframe src="project.html#center=10.0607,-2.5019&zoom=15"></iframe>
+    </div>
+
+    <div id="thematic" class="hidden">
+      <h2>Thematic Maps</h2>
+      <div class="thematic-container">
+        <img src="thematic/Gender Map.jpg" alt="Gender Map" onclick="openModal(this.src)">
+        <img src="thematic/Zoning Map.jpg" alt="Zoning Map" onclick="openModal(this.src)">
+        <img src="thematic/Acquisition Type Map.jpg" alt="Acquisition Type Map" onclick="openModal(this.src)">
+        <img src="thematic/Available Parcels Near Public Spaces.jpg" alt="Available Parcels" onclick="openModal(this.src)">
+        <img src="thematic/Digital Map of Area.jpg" alt="Digital Map of Area" onclick="openModal(this.src)">
+      </div>
+    </div>
+
+    <div id="contact" class="hidden">
+      <h2>Contact Us</h2>
+      <p><strong>Wa Lands Commission Office</strong></p>
+      <p>Location: Wa Municipality, Upper West Region, Ghana</p>
+      <p>Address: Adjacent Regional Fire Service Office, Wa</p>
+      <p>Phone: +233 302 500 000</p>
+      <p>Email: <a href="mailto:lands@gh.gov">lands@gh.gov</a></p>
+    </div>
+  </div>
+
+  <div id="modal" onclick="closeModal()">
+    <span>&times;</span>
+    <img id="modal-img" src="">
+  </div>
+
+  <script>
+    function showPage(pageId) {
+      const sections = ['home', 'search', 'map', 'thematic', 'contact'];
+      sections.forEach(id => {
+        document.getElementById(id).classList.add('hidden');
+      });
+      document.getElementById(pageId).classList.remove('hidden');
+    }
+
+    function openModal(src) {
+      document.getElementById('modal-img').src = src;
+      document.getElementById('modal').style.display = 'block';
+    }
+
+    function closeModal() {
+      document.getElementById('modal').style.display = 'none';
+    }
+  </script>
+</body>
+</html>
